@@ -4,11 +4,7 @@ defmodule MyEnum do
   end
 
   def all?([head | tail], func) do
-    if func.(head) do
-      all?(tail, func)
-    else
-      false
-    end
+    func.(head) && all?(tail, func)
   end
 
   def each([], _) do
@@ -20,20 +16,16 @@ defmodule MyEnum do
     each(tail, func)
   end
 
-  defp filter([], _, list) do
-    list
+  def filter([], _) do
+    []
   end
 
-  defp filter([head | tail], func, list) do
+  def filter([head | tail], func) do
     if func.(head) do
-      filter(tail, func, [head | list])
+      [head] ++ filter(tail, func)
     else
-      filter(tail, func, list)
+      filter(tail, func)
     end
-  end
-
-  def filter(list, func) do
-    filter(list, func, [])
   end
 
   defp split(list_a, 0, list_b) do
