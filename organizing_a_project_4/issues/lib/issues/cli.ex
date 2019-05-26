@@ -75,7 +75,26 @@ defmodule Issues.CLI do
     |> Enum.reverse
   end
 
+  def column_length(list, column) do
+    Enum.map(list, fn i ->
+      Map.get(i, column)
+      |> get_column_len
+    end)
+    |> Enum.max
+  end
+
+  def get_column_len(value) when is_integer(value) do
+    value |> Integer.to_string |> get_column_len
+  end
+
+  def get_column_len(value) do
+    value |> String.length
+  end
+
   def print_table(list) do
+    number_len = column_length(list, "number")
+    created_at_len = column_length(list, "created_at")
+    title_len = column_length(list, "title")
     IO.puts " #    | created_at           | title"
     IO.puts "------+----------------------+------------------------------------"
     Enum.each(list, fn i ->
